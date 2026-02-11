@@ -3,53 +3,54 @@ package com.product.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.product.entity.ProductEntity;
+import com.product.dto.ProductRequestDTO;
+import com.product.dto.ProductResponseDTO;
 import com.product.service.ProductService;
 
 @RestController
-@RequestMapping("/prod")
-public class ProductController 
-{
+@RequestMapping("/products")
+public class ProductController {
 
 	@Autowired
-	ProductService service;
-	//add product
+	private ProductService productService;
+
 	@PostMapping
-	public ProductEntity addProd(@RequestBody ProductEntity prod)
-	{
-		return service.addProduct(prod);
+	public ProductResponseDTO addProduct(@RequestBody ProductRequestDTO dto) {
+		return productService.addProduct(dto);
 	}
-	//get by id
+
 	@GetMapping("/{id}")
-	public ProductEntity getById(@PathVariable Long id)
-	{
-		return service.getProductById(id);
+	public ProductResponseDTO getProductById(@PathVariable Long id) {
+		return productService.getProductById(id);
 	}
-	//get all
-	@GetMapping
-	public List<ProductEntity> getAllProduct()
-	{
-		return service.getAllProduct();
+
+	@GetMapping("/active")
+	public List<ProductResponseDTO> getActiveProducts() {
+		return productService.getActiveProducts();
 	}
-	//update by id
+
+	@GetMapping("/all")
+	public List<ProductResponseDTO> getAllProducts() {
+		return productService.getAllProducts();
+	}
+
 	@PutMapping("/{id}")
-	public ProductEntity updateProduct(@PathVariable Long id,@RequestBody ProductEntity prod)
-	{
-		return service.updateProduct(id, prod);
+	public ProductResponseDTO updateProduct(@PathVariable Long id, @RequestBody ProductRequestDTO dto) {
+
+		return productService.updateProduct(id, dto);
 	}
-	//delete by id
+
 	@DeleteMapping("/{id}")
-	public String deleteById(@PathVariable Long id)
-	{
-		return service.deleteById(id);
+	public String deleteProduct(@PathVariable Long id) {
+		productService.deleteProduct(id);
+		return "Product deleted successfully";
 	}
+	@PostMapping("/bulk")
+	public List<ProductResponseDTO> addProducts(
+	        @RequestBody List<ProductRequestDTO> dtoList) {
+	    return productService.addProducts(dtoList);
+	}
+
 }
